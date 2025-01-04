@@ -73,7 +73,7 @@ class Node(Generic[T]):
                 # Node has one child
                 return self.left or self.right
 
-        return self
+        return self # Return the root of the updated subtree
 
     def find_min(self) -> 'Node[T]':
         """
