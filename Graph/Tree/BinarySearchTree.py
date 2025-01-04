@@ -152,8 +152,9 @@ class BinarySearchTree(Generic[T]):
         if self.root is None:
             self.root = Node(value)
             self.size += 1
-        else:
-            self._insert(self.root, value)
+            return
+
+        self._insert(self.root, value)
 
     def _insert(self, node: Node[T], value: T) -> None:
         """
@@ -169,13 +170,15 @@ class BinarySearchTree(Generic[T]):
                 node.left = Node(value)
                 node.left.parent = node
                 self.size += 1
+
+            return
+
+        if node.has_right_child():
+            self._insert(node.right, value)
         else:
-            if node.has_right_child():
-                self._insert(node.right, value)
-            else:
-                node.right = Node(value)
-                node.right.parent = node
-                self.size += 1
+            node.right = Node(value)
+            node.right.parent = node
+            self.size += 1
 
     def search(self, value: T) -> bool:
         """
@@ -196,12 +199,14 @@ class BinarySearchTree(Generic[T]):
         """
         if node is None:
             return False
-        elif node.value == value:
+
+        if node.value == value:
             return True
-        elif value < node.value:
+
+        if value < node.value:
             return self._search(node.left, value)
-        else:
-            return self._search(node.right, value)
+
+        return self._search(node.right, value)
 
     def delete(self, value: T) -> None:
         """
