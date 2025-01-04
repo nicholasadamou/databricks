@@ -60,14 +60,19 @@ class Node(Generic[T]):
             if self.right:
                 self.right = self.right.delete(value)
         else:
+            # Node to be deleted found
             if self.is_leaf():
                 return None
+
             if self.has_both_children():
+                # Node has two children
                 successor = self.right.find_min()
                 self.value = successor.value
                 self.right = self.right.delete(successor.value)
             else:
-                return self.left if self.left else self.right
+                # Node has one child
+                return self.left or self.right
+
         return self
 
     def find_min(self) -> 'Node[T]':
