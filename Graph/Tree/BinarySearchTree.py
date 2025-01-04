@@ -14,6 +14,72 @@ class Node(Generic[T]):
         self.left: Optional['Node[T]'] = None
         self.right: Optional['Node[T]'] = None
 
+    def insert(self, value: T) -> None:
+        """
+        Insert a value into the subtree rooted at this node.
+
+        :param value: The value to insert.
+        """
+        if value < self.value:
+            if self.left is None:
+                self.left = Node(value)
+                self.left.parent = self
+            else:
+                self.left.insert(value)
+        else:
+            if self.right is None:
+                self.right = Node(value)
+                self.right.parent = self
+            else:
+                self.right.insert(value)
+
+    def search(self, value: T) -> bool:
+        """
+        Search for a value in the subtree rooted at this node.
+        :param value: The value to search for.
+        :return: True if the value is found, otherwise False.
+        """
+        if self.value == value:
+            return True
+        elif value < self.value and self.left is not None:
+            return self.left.search(value)
+        elif value > self.value and self.right is not None:
+            return self.right.search(value)
+        return False
+
+    def delete(self, value: T) -> Optional['Node[T]']:
+        """
+        Delete a value from the subtree rooted at this node.
+        :param value: The value to delete.
+        :return: The root of the updated subtree.
+        """
+        if value < self.value:
+            if self.left:
+                self.left = self.left.delete(value)
+        elif value > self.value:
+            if self.right:
+                self.right = self.right.delete(value)
+        else:
+            if self.is_leaf():
+                return None
+            if self.has_both_children():
+                successor = self.right.find_min()
+                self.value = successor.value
+                self.right = self.right.delete(successor.value)
+            else:
+                return self.left if self.left else self.right
+        return self
+
+    def find_min(self) -> 'Node[T]':
+        """
+        Find the node with the minimum value in the subtree rooted at this node.
+        :return: The node with the minimum value.
+        """
+        current = self
+        while current.left:
+            current = current.left
+        return current
+
     def __hash__(self) -> int:
         """
         Return the hash of the node based on its value.
@@ -151,34 +217,9 @@ class BinarySearchTree(Generic[T]):
         """
         if self.root is None:
             self.root = Node(value)
-            self.size += 1
-            return
-
-        self._insert(self.root, value)
-
-    def _insert(self, node: Node[T], value: T) -> None:
-        """
-        Helper method to insert a value starting from a given node.
-
-        :param node: The node to start the insertion from.
-        :param value: The value to insert.
-        """
-        if value < node.value:
-            if node.has_left_child():
-                self._insert(node.left, value)
-            else:
-                node.left = Node(value)
-                node.left.parent = node
-                self.size += 1
-
-            return
-
-        if node.has_right_child():
-            self._insert(node.right, value)
         else:
-            node.right = Node(value)
-            node.right.parent = node
-            self.size += 1
+            self.root.insert(value)
+        self.size += 1
 
     def search(self, value: T) -> bool:
         """
@@ -187,26 +228,10 @@ class BinarySearchTree(Generic[T]):
         :param value: The value to search for.
         :return: True if the value is found, otherwise False.
         """
-        return self._search(self.root, value)
-
-    def _search(self, node: Optional[Node[T]], value: T) -> bool:
-        """
-        Helper method to search for a value starting from a given node.
-
-        :param node: The node to start the search from.
-        :param value: The value to search for.
-        :return: True if the value is found, otherwise False.
-        """
-        if node is None:
+        if self.root is None:
             return False
 
-        if node.value == value:
-            return True
-
-        if value < node.value:
-            return self._search(node.left, value)
-
-        return self._search(node.right, value)
+        return self.root.search(value)
 
     def delete(self, value: T) -> None:
         """
@@ -214,81 +239,8 @@ class BinarySearchTree(Generic[T]):
 
         :param value: The value to delete.
         """
-        self._delete(self.root, value)
-
-    def _delete(self, node: Optional[Node[T]], value: T) -> None:
-        """
-        Helper method to delete a value starting from a given node.
-
-        :param node: The node to start the deletion from.
-        :param value: The value to delete.
-        """
-        if node is None:
+        if self.root is None:
             return
-        elif value < node.value:
-            self._delete(node.left, value)
-        elif value > node.value:
-            self._delete(node.right, value)
-        else:
-            if node.is_leaf():
-                self._delete_leaf(node)
-            elif node.has_both_children():
-                self._delete_internal(node)
-            else:
-                self._delete_one_child(node)
 
-    def _delete_leaf(self, node: Node[T]) -> None:
-        """
-        Helper method to delete a leaf node.
-
-        :param node: The leaf node to delete.
-        """
-        if node.parent is None:
-            self.root = None
-        elif node == node.parent.left:
-            node.parent.left = None
-        else:
-            node.parent.right = None
-        self.size -= 1
-
-    def _delete_internal(self, node: Node[T]) -> None:
-        """
-        Helper method to delete a node with two children.
-
-        :param node: The node to delete.
-        """
-        successor = self._find_min(node.right)
-        node.value = successor.value
-        if successor.is_leaf():
-            self._delete_leaf(successor)
-        else:
-            self._delete_one_child(successor)
-
-    def _find_min(self, node: Node[T]) -> Node[T]:
-        """
-        Find the node with the minimum value starting from a given node.
-
-        :param node: The node to start the search from.
-        :return: The node with the minimum value.
-        """
-        current = node
-        while current.left:
-            current = current.left
-        return current
-
-    def _delete_one_child(self, node: Node[T]) -> None:
-        """
-        Helper method to delete a node with one child.
-
-        :param node: The node to delete.
-        """
-        child = node.left if node.has_left_child() else node.right
-        if node.parent is None:
-            self.root = child
-        elif node == node.parent.left:
-            node.parent.left = child
-        else:
-            node.parent.right = child
-        if child:
-            child.parent = node.parent
+        self.root = self.root.delete(value)
         self.size -= 1
