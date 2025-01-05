@@ -10,15 +10,16 @@ class MaxHeap(Generic[T]):
         _heap (List[T]): The internal list representation of the heap.
     """
 
-    def __init__(self, elements: Optional[List[T]] = None):
+    def __init__(self, items: Optional[List[T]] = None):
         """
         Initialize the heap with optional initial elements.
 
-        :param elements: A list of elements to initialize the heap.
+        :param items: A list of elements to initialize the heap.
         """
-        self._heap = elements.copy() or []
-        for i in reversed(range(len(self._heap) // 2)):
-            self._sift_down(i)
+        self._heap = []
+
+        if items:
+            self.heapify(items.copy())
 
     def insert(self, element: T) -> None:
         """
@@ -113,3 +114,14 @@ class MaxHeap(Generic[T]):
         :param j: The second index.
         """
         self._heap[i], self._heap[j] = self._heap[j], self._heap[i]
+
+    def heapify(self, items):
+        """
+        Create a heap from the given items.
+
+        :param items: The items to create the heap from.
+        """
+        self._heap = items[:]
+        start_index = len(self._heap) // 2 - 1
+        for index in range(start_index, -1, -1):
+            self._sift_down(index)
