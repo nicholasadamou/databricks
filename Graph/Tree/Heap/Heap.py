@@ -12,7 +12,7 @@ class Heap(Generic[T]):
     def __init__(self, items: Optional[List[T]] = None):
         self._heap: List[T] = []
         if items:
-            self.heapify(items)
+            self.heapify(items.copy())
 
     def insert(self, item: T) -> None:
         """

@@ -16,7 +16,7 @@ class MaxHeap(Generic[T]):
 
         :param elements: A list of elements to initialize the heap.
         """
-        self._heap = elements or []
+        self._heap = elements.copy() or []
         for i in reversed(range(len(self._heap) // 2)):
             self._sift_down(i)
 

@@ -15,15 +15,13 @@ class TestMaxHeap(unittest.TestCase):
 
     def test_heapify(self):
         items = [3, 1, 4, 1, 5, 9, 2, 6, 5]
-        expected_sorted = sorted(items, reverse=True)
-
         max_heap = MaxHeap[int](items)
 
         sorted_items = []
         while not max_heap.is_empty():
             sorted_items.append(max_heap.pop())
 
-        self.assertEqual(sorted_items, expected_sorted)
+        self.assertEqual(sorted_items, sorted(items, reverse=True))
 
     def test_peek(self):
         max_heap = MaxHeap[int]()
