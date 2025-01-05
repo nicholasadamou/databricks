@@ -26,7 +26,7 @@ cd databricks
 python setup.py install
 ```
 
-This library is not part of [PyPI](https://pypi.org/) because the name `databricks` has already been used, so you will need to install it manually.
+This library is not part of [PyPI](https://pypi.org/) because the name `databricks` has already been used.
 
 ## Usage
 
