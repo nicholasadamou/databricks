@@ -58,5 +58,35 @@ class TestRedBlackTree(unittest.TestCase):
         self.assertIsNotNone(self.rb_tree.root.left)
         self.assertIsNotNone(self.rb_tree.root.right)
 
+    def test_delete(self):
+        """Test deletion of elements from the Red-Black tree."""
+        elements = [10, 20, 30, 15, 25, 5]
+        for element in elements:
+            self.rb_tree.insert(element)
+
+        # Delete a leaf node
+        self.rb_tree.delete(5)
+        expected_in_order_after_leaf_deletion = [10, 15, 20, 25, 30]
+        self.assertEqual(list(self.rb_tree), expected_in_order_after_leaf_deletion, "In-order traversal after deleting leaf node is incorrect")
+
+        # Delete a node with one child
+        self.rb_tree.delete(30)
+        expected_in_order_after_one_child_deletion = [10, 15, 20, 25]
+        self.assertEqual(list(self.rb_tree), expected_in_order_after_one_child_deletion, "In-order traversal after deleting node with one child is incorrect")
+
+        # Delete a node with two children
+        self.rb_tree.delete(20)
+        expected_in_order_after_two_children_deletion = [10, 15, 25]
+        self.assertEqual(list(self.rb_tree), expected_in_order_after_two_children_deletion, "In-order traversal after deleting node with two children is incorrect")
+
+        # Verify Red-Black properties
+        self._check_red_black_properties(self.rb_tree.root)
+
+        # Attempt to delete a non-existent element
+        self.rb_tree.delete(99)
+        self.assertEqual(list(self.rb_tree), expected_in_order_after_two_children_deletion, "Tree structure should remain unchanged after deleting non-existent element")
+
+
+
 if __name__ == '__main__':
     unittest.main()

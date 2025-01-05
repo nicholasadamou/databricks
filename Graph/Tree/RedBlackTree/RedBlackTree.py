@@ -185,3 +185,132 @@ class RedBlackTree(Generic[T]):
                 break
 
         self.root.color = False
+
+    def delete(self, key: T):
+        """
+        Delete a node with the given key from the Red-Black tree.
+
+        :param key: The key of the node to delete.
+        """
+        z = self._find_node(self.root, key)
+        if z == self.NIL_LEAF:
+            return  # Key not found in the tree
+
+        y = z
+        y_original_color = y.color
+        if z.left == self.NIL_LEAF:
+            x = z.right
+            self._transplant(z, z.right)
+        elif z.right == self.NIL_LEAF:
+            x = z.left
+            self._transplant(z, z.left)
+        else:
+            y = self._minimum(z.right)
+            y_original_color = y.color
+            x = y.right
+            if y.parent == z:
+                x.parent = y
+            else:
+                self._transplant(y, y.right)
+                y.right = z.right
+                y.right.parent = y
+            self._transplant(z, y)
+            y.left = z.left
+            y.left.parent = y
+            y.color = z.color
+
+        if not y_original_color:
+            self._fix_delete(x)
+
+    def _transplant(self, u: RedBlackNode[T], v: RedBlackNode[T]):
+        """
+        Replace the subtree rooted at node u with the subtree rooted at node v.
+
+        :param u: The node to be replaced.
+        :param v: The replacement node.
+        """
+        if u.parent is None:
+            self.root = v
+        elif u == u.parent.left:
+            u.parent.left = v
+        else:
+            u.parent.right = v
+        v.parent = u.parent
+
+    def _minimum(self, node: RedBlackNode[T]) -> RedBlackNode[T]:
+        """
+        Find the node with the minimum key in the subtree rooted at the given node.
+
+        :param node: The root of the subtree.
+        :return: The node with the minimum key.
+        """
+        while node.left != self.NIL_LEAF:
+            node = node.left
+        return node
+
+    def _fix_delete(self, x: RedBlackNode[T]):
+        """
+        Fix the Red-Black tree after a deletion to maintain Red-Black properties.
+
+        :param x: The node to fix starting from.
+        """
+        while x != self.root and x.color == False:
+            if x == x.parent.left:
+                w = x.parent.right
+                if w.color:  # Case 1
+                    w.color = False
+                    x.parent.color = True
+                    self.left_rotate(x.parent)
+                    w = x.parent.right
+                if w.left.color == False and w.right.color == False:  # Case 2
+                    w.color = True
+                    x = x.parent
+                else:
+                    if not w.right.color:  # Case 3
+                        w.left.color = False
+                        w.color = True
+                        self.right_rotate(w)
+                        w = x.parent.right
+                    w.color = x.parent.color  # Case 4
+                    x.parent.color = False
+                    w.right.color = False
+                    self.left_rotate(x.parent)
+                    x = self.root
+            else:
+                w = x.parent.left
+                if w.color:  # Case 1
+                    w.color = False
+                    x.parent.color = True
+                    self.right_rotate(x.parent)
+                    w = x.parent.left
+                if w.left.color == False and w.right.color == False:  # Case 2
+                    w.color = True
+                    x = x.parent
+                else:
+                    if not w.left.color:  # Case 3
+                        w.right.color = False
+                        w.color = True
+                        self.left_rotate(w)
+                        w = x.parent.left
+                    w.color = x.parent.color  # Case 4
+                    x.parent.color = False
+                    w.left.color = False
+                    self.right_rotate(x.parent)
+                    x = self.root
+
+        x.color = False
+
+    def _find_node(self, node: RedBlackNode[T], key: T) -> RedBlackNode[T]:
+        """
+        Find a node with the given key in the subtree rooted at the given node.
+
+        :param node: The root of the subtree.
+        :param key: The key to search for.
+        :return: The node with the given key, or NIL_LEAF if not found.
+        """
+        while node != self.NIL_LEAF and key != node.key:
+            if key < node.key:
+                node = node.left
+            else:
+                node = node.right
+        return node
