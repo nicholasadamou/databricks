@@ -74,23 +74,32 @@ class Trie:
         :type word: str
         :return: None
         """
-        def _delete(node, word, index):
+        def _delete(current, word, index):
+            """
+            Recursively deletes a word from the Trie.
+            :param current: The current Trie node.
+            :param word: The word to delete.
+            :param index: The current index in the word.
+            :return: True if the current node should be deleted, otherwise False.
+            """
             if index == len(word):
-                if node.is_end_of_word:
-                    node.is_end_of_word = False
-                return len(node.children) == 0
-
+                # Reached the end of the word to be deleted
+                if not current.is_end_of_word:
+                    return False  # Word does not exist
+                current.is_end_of_word = False
+                # If no children, this node can be deleted
+                return len(current.children) == 0
             char = word[index]
-            if char not in node.children:
-                return False
+            if char not in current.children:
+                return False  # Word does not exist
+            node = current.children[char]
+            should_delete_current_node = _delete(node, word, index + 1)
 
-            child = node.children[char]
-            should_delete = _delete(child, word, index + 1)
-
-            if should_delete:
-                del node.children[char]
-                return len(node.children) == 0
-
+            # If true, delete the reference to the child node
+            if should_delete_current_node:
+                del current.children[char]
+                # Return true if no children are left and the current node is not the end of another word
+                return len(current.children) == 0 and not current.is_end_of_word
             return False
 
-        _delete(self.root, word, 0)
+        return _delete(self.root, word, 0)

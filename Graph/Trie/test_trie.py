@@ -44,5 +44,34 @@ class TestTrie(unittest.TestCase):
         self.trie.delete("apple")
         self.assertFalse(self.trie.search("apple"))
 
+    def test_delete_on_prefix(self):
+        """Test deleting a word that is a prefix of another word."""
+        self.trie.insert("apple")
+        self.trie.insert("app")
+        self.assertTrue(self.trie.search("apple"))
+        self.assertTrue(self.trie.search("app"))
+        self.trie.delete("app")
+        self.assertTrue(self.trie.search("apple"))
+        self.assertFalse(self.trie.search("app"))
+
+    def test_delete_common_prefix(self):
+        """Test deleting a word that has a common prefix with another word."""
+        self.trie.insert("their")
+        self.trie.insert("bat")
+        self.trie.insert("the")
+        self.assertTrue(self.trie.search("their"))
+        self.assertTrue(self.trie.search("bat"))
+        self.assertTrue(self.trie.search("the"))
+        self.trie.delete("their")
+        self.assertFalse(self.trie.search("their"))
+        self.assertTrue(self.trie.search("the"))
+
+    def test_delete_non_existent_word(self):
+        """Test deleting a word that does not exist in the Trie."""
+        self.trie.insert("apple")
+        self.assertTrue(self.trie.search("apple"))
+        self.trie.delete("app")
+        self.assertTrue(self.trie.search("apple"))
+
 if __name__ == '__main__':
     unittest.main()
