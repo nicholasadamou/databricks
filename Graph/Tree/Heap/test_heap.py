@@ -1,6 +1,6 @@
 import unittest
 
-from Heap.Heap import Heap
+from Graph.Tree.Heap.Heap import Heap
 
 class TestHeap(unittest.TestCase):
     def test_heapify(self):

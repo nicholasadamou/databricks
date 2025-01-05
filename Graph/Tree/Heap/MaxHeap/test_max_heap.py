@@ -1,5 +1,5 @@
 import unittest
-from Heap.MaxHeap.MaxHeap import MaxHeap
+from Graph.Tree.Heap.MaxHeap.MaxHeap import MaxHeap
 
 class TestMaxHeap(unittest.TestCase):
     def test_insert_and_extract_max(self):
