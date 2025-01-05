@@ -37,5 +37,12 @@ class TestTrie(unittest.TestCase):
         self.assertTrue(self.trie.starts_with("ba"))
         self.assertTrue(self.trie.starts_with("ca"))
 
+    def test_delete(self):
+        """Test deleting a word from the Trie."""
+        self.trie.insert("apple")
+        self.assertTrue(self.trie.search("apple"))
+        self.trie.delete("apple")
+        self.assertFalse(self.trie.search("apple"))
+
 if __name__ == '__main__':
     unittest.main()

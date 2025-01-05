@@ -65,3 +65,32 @@ class Trie:
                 return False
             node = node.children[char]
         return True
+
+    def delete(self, word):
+        """
+        Deletes a word from the Trie.
+
+        :param word: The word to delete from the Trie.
+        :type word: str
+        :return: None
+        """
+        def _delete(node, word, index):
+            if index == len(word):
+                if node.is_end_of_word:
+                    node.is_end_of_word = False
+                return len(node.children) == 0
+
+            char = word[index]
+            if char not in node.children:
+                return False
+
+            child = node.children[char]
+            should_delete = _delete(child, word, index + 1)
+
+            if should_delete:
+                del node.children[char]
+                return len(node.children) == 0
+
+            return False
+
+        _delete(self.root, word, 0)
