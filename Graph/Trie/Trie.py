@@ -114,3 +114,81 @@ class Trie:
             return False
 
         return _delete(self.root, word, 0)
+
+    def total_words(self):
+        """
+        Returns the total number of words in the Trie.
+        :return: The total number of words in the Trie.
+        :rtype: int
+        """
+        def _count_words(node):
+            """
+            Recursively counts the number of words in the Trie.
+            :param node: The current Trie node.
+            :return: The total number of words in the Trie.
+            :rtype: int
+            """
+            count = 0
+
+            # Leaf nodes mark the end of a word
+            if node.is_end_of_word:
+                count += 1
+
+            for child in node.children.values():
+                count += _count_words(child)
+
+            return count
+
+        return _count_words(self.root)
+
+    def get_words(self):
+        """
+        Returns all the words in the Trie.
+        :return: A list of all words in the Trie.
+        :rtype: List[str]
+        """
+        def _get_words(node, prefix):
+            """
+            Recursively retrieves all words in the Trie.
+            :param node: The current Trie node.
+            :param prefix: The prefix formed by the characters traversed so far.
+            :return: A list of all words in the Trie.
+            :rtype: List[str]
+            """
+            words = []
+
+            if node.is_end_of_word:
+                words.append(prefix)
+
+            for char, child in node.children.items():
+                words.extend(_get_words(child, prefix + char))
+
+            return words
+
+        return _get_words(self.root, "")
+
+    def sort(self):
+        """
+        Returns all the words in the Trie in sorted order (lexicographically).
+        :return: A list of all words in the Trie in sorted order.
+        :rtype: List[str]
+        """
+        def _sort(node, prefix):
+            """
+            Recursively retrieves all words in the Trie in sorted order.
+            :param node: The current Trie node.
+            :param prefix: The prefix formed by the characters traversed so far.
+            :return: A list of all words in the Trie in sorted order.
+            :rtype: List[str]
+            """
+            words = []
+
+            if node.is_end_of_word:
+                words.append(prefix)
+
+            for char, child in sorted(node.children.items()):
+                words.extend(_sort(child, prefix + char))
+
+            return words
+
+        return _sort(self.root, "")

@@ -73,5 +73,26 @@ class TestTrie(unittest.TestCase):
         self.trie.delete("app")
         self.assertTrue(self.trie.search("apple"))
 
+    def test_total_words(self):
+        """Test counting the total number of words in the Trie."""
+        words = ["apple", "app", "bat", "ball", "cat"]
+        for word in words:
+            self.trie.insert(word)
+        self.assertEqual(self.trie.total_words(), len(words))
+
+    def test_get_words(self):
+        """Test getting all words in the Trie."""
+        words = ["apple", "app", "bat", "ball", "cat"]
+        for word in words:
+            self.trie.insert(word)
+        self.assertEqual(sorted(self.trie.get_words()), sorted(words))
+
+    def test_sort(self):
+        """Test sorting the words in the Trie."""
+        words = ["apple", "app", "bat", "ball", "cat"]
+        for word in words:
+            self.trie.insert(word)
+        self.assertEqual(self.trie.sort(), sorted(words))
+
 if __name__ == '__main__':
     unittest.main()
