@@ -1,6 +1,7 @@
 # Databricks (🐍 Pythonic Data Structures)
 
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)
 
 This library is a collection of data structures that are not included in the Python standard library. The goal is to provide a Pythonic interface to these data structures, making them easier to use and more intuitive.
 
@@ -17,19 +18,15 @@ I created this library because I wanted to learn more about data structures and 
 
 ## Installation
 
-You can install the library using pip:
-
-```bash
-pip install databricks
-```
-
-Alternatively, you can clone the repository and install it manually:
+You can clone the repository and install it manually:
 
 ```bash
 git clone https://github.com/nicholasadamou/databricks.git
 cd databricks
 python setup.py install
 ```
+
+This library is not part of [PyPI](https://pypi.org/) because the name `databricks` has already been used, so you will need to install it manually.
 
 ## Usage
 
