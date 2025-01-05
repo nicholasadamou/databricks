@@ -35,7 +35,7 @@ Here's a quick example of how to use one of the data structures in this library:
 ```python
 from databricks import Heap
 
-heap = Heap()
+heap = Heap[int]()
 heap.insert(10)
 heap.insert(5)
 heap.insert(20)
