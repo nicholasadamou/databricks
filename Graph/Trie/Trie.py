@@ -1,3 +1,14 @@
+"""
+Why use a dictionary to store children in a Trie?
+
+The TrieNode class uses a dictionary to store children because it provides a more efficient way to look up child nodes based on the character.
+
+The alternative of using an array or list to store children would require iterating over all children to find the one with the matching character.
+This would result in a time complexity of O(n) for each character lookup, where n is the number of children.
+
+By using a dictionary, the lookup time is reduced to O(1) on average, as dictionaries provide constant-time access to values based on keys.
+"""
+
 class TrieNode:
     """
     Represents a single node in the Trie.
