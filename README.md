@@ -35,12 +35,14 @@ Here's a quick example of how to use one of the data structures in this library:
 ```python
 from databricks import Heap
 
+# By default, the heap is a min-heap
+
 heap = Heap[int]()
 heap.insert(10)
 heap.insert(5)
 heap.insert(20)
 
-print(heap.extract_min())  # Outputs: 5
+print(heap.pop())  # Outputs: 5
 ```
 
 ## Testing
